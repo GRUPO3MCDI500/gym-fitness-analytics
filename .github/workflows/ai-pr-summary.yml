@@ -1,4 +1,4 @@
-name: AI - Resumen de Pull Request
+nname: AI - Resumen de Pull Request
 
 on:
   pull_request:
@@ -26,9 +26,58 @@ jobs:
           fetch-depth: 0
 
       - name: Obtener archivos modificados
+        id: cambios
         run: |
           echo "Archivos modificados en el Pull Request:"
           git diff --name-only origin/main...HEAD | tee cambios.txt
+
+          echo "files<<EOF" >> "$GITHUB_OUTPUT"
+          cat cambios.txt >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+
+      - name: Clasificar tipo de cambio
+        id: clasificacion
+        run: |
+          tipo="mixto"
+
+          if grep -q "^notebooks/F1_Definicion.ipynb" cambios.txt; then
+            tipo="notebook"
+          fi
+
+          if grep -q "^README.md" cambios.txt; then
+            if [ "$tipo" = "mixto" ]; then
+              tipo="documentacion"
+            else
+              tipo="mixto"
+            fi
+          fi
+
+          if grep -q "^data/" cambios.txt; then
+            if [ "$tipo" = "mixto" ]; then
+              tipo="dataset"
+            else
+              tipo="mixto"
+            fi
+          fi
+
+          if grep -q "^.github/workflows/" cambios.txt; then
+            if [ "$tipo" = "mixto" ]; then
+              tipo="ci-cd"
+            else
+              tipo="mixto"
+            fi
+          fi
+
+          if grep -q "^docs/" cambios.txt || grep -q "^reports/" cambios.txt; then
+            if [ "$tipo" = "mixto" ]; then
+              tipo="evidencias"
+            else
+              tipo="mixto"
+            fi
+          fi
+
+          echo "tipo=$tipo" >> "$GITHUB_OUTPUT"
+          echo "Tipo de cambio detectado: $tipo"
 
       - name: Crear contexto para el modelo
         id: contexto
@@ -38,6 +87,9 @@ jobs:
             echo ""
             echo "Objetivo del proyecto:"
             echo "Analizar la evolucion global de la industria fitness y gimnasios entre 2000 y 2026 mediante un flujo reproducible con Python, Jupyter Notebook, GitHub y GitHub Actions."
+            echo ""
+            echo "Tipo de cambio detectado automaticamente:"
+            echo "${{ steps.clasificacion.outputs.tipo }}"
             echo ""
             echo "Archivos modificados en este Pull Request:"
             cat cambios.txt
@@ -72,6 +124,7 @@ jobs:
       - name: Generar resumen con GitHub Models
         id: ai
         uses: actions/ai-inference@v1
+        continue-on-error: true
         with:
           model: openai/gpt-4o-mini
           prompt: |
@@ -83,7 +136,7 @@ jobs:
 
             ## Resumen automatico del Pull Request
 
-            **Tipo de cambio:** documentacion / notebook / dataset / ci-cd / ramas / evidencias / mixto
+            **Tipo de cambio detectado:** ${{ steps.clasificacion.outputs.tipo }}
 
             **Archivos modificados:**
             - Lista breve de archivos afectados.
@@ -92,11 +145,14 @@ jobs:
             Explica en 2 o 3 lineas que cambia y si afecta la reproducibilidad del proyecto.
 
             **Validaciones recomendadas:**
-            - Revisar que GitHub Actions pase correctamente.
+            - Revisar que el workflow `CI - Validacion Fase 1` pase correctamente.
             - Ejecutar el notebook si se modifico `F1_Definicion.ipynb`.
             - Revisar README si se modifico la documentacion.
             - Verificar dataset si se modifico `data/raw/clean_gym_data.csv`.
             - Revisar workflow si se modifico `.github/workflows/`.
+
+            **Riesgos o puntos de atencion:**
+            Indica si existe algun riesgo tecnico, por ejemplo rutas rotas, dependencias faltantes, cambios en dataset o documentacion desactualizada.
 
             **Observacion final:**
             Indica si el Pull Request parece seguro para fusionarse a `main`, siempre que las validaciones pasen.
@@ -104,11 +160,47 @@ jobs:
             Contexto:
             ${{ steps.contexto.outputs.text }}
 
-      - name: Guardar resumen en archivo
+      - name: Crear resumen de respaldo si falla GitHub Models
+        if: steps.ai.outcome != 'success'
+        run: |
+          {
+            echo "## Resumen automatico del Pull Request"
+            echo ""
+            echo "**Tipo de cambio detectado:** ${{ steps.clasificacion.outputs.tipo }}"
+            echo ""
+            echo "**Archivos modificados:**"
+            sed 's/^/- /' cambios.txt
+            echo ""
+            echo "**Impacto tecnico:**"
+            echo "No fue posible generar el resumen con GitHub Models. Se deja un resumen basico basado en los archivos modificados."
+            echo ""
+            echo "**Validaciones recomendadas:**"
+            echo "- Revisar que el workflow CI - Validacion Fase 1 pase correctamente."
+            echo "- Ejecutar el notebook si se modifico F1_Definicion.ipynb."
+            echo "- Revisar README si se modifico documentacion."
+            echo "- Verificar dataset si se modifico data/raw/clean_gym_data.csv."
+            echo ""
+            echo "**Observacion final:**"
+            echo "El Pull Request debe revisarse manualmente antes de fusionarse a main."
+          } > resumen_ai.md
+
+      - name: Guardar resumen generado por GitHub Models
+        if: steps.ai.outcome == 'success'
         run: |
           cat > resumen_ai.md <<'EOF'
           ${{ steps.ai.outputs.response }}
           EOF
+
+      - name: Mostrar resumen en logs
+        run: |
+          echo "Resumen generado:"
+          cat resumen_ai.md
+
+      - name: Subir resumen como artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: resumen-ai-pr
+          path: resumen_ai.md
 
       - name: Comentar resumen en Pull Request
         uses: actions/github-script@v7
