@@ -540,6 +540,95 @@ El workflow cumple las siguientes funciones:
 La implementación de CI/CD permite detectar errores tempranos de estructura, dependencias o carga del dataset, aportando a la reproducibilidad técnica del proyecto.
 
 ---
+## Resumen automático de Pull Requests con GitHub Models
+
+Además del workflow principal de CI/CD, se implementó un workflow complementario basado en **GitHub Models** para apoyar la documentación automática de los cambios realizados mediante Pull Requests.
+
+Este workflow se encuentra en:
+
+```text
+.github/workflows/ai-pr-summary.yml
+```
+
+Su objetivo es generar automáticamente un resumen técnico cada vez que se abre, actualiza o reabre un Pull Request dirigido a la rama `main`.
+
+### Funcionamiento general
+
+El flujo de trabajo se ejecuta bajo el siguiente proceso:
+
+```text
+Pull Request hacia main
+        ↓
+GitHub Actions ejecuta el workflow AI - Resumen de Pull Request
+        ↓
+Se identifican los archivos modificados
+        ↓
+Se clasifica el tipo de cambio realizado
+        ↓
+GitHub Models genera un resumen técnico automático
+        ↓
+El resumen se publica como comentario en el Pull Request
+        ↓
+El resumen también se guarda como artifact descargable
+```
+
+### Qué analiza el workflow
+
+El workflow revisa los archivos modificados en el Pull Request y clasifica el cambio según el tipo de componente afectado:
+
+| Tipo de cambio        | Archivos o carpetas relacionadas        |
+| --------------------- | --------------------------------------- |
+| Notebook              | `notebooks/F1_Definicion.ipynb`         |
+| Documentación         | `README.md`                             |
+| Dataset               | `data/` y `data/raw/clean_gym_data.csv` |
+| CI/CD                 | `.github/workflows/`                    |
+| Documentación técnica | `docs/`                                 |
+| Informe o evidencias  | `reports/`                              |
+
+### Contenido del resumen generado
+
+El resumen automático generado por GitHub Models incluye:
+
+* Tipo de cambio detectado.
+* Archivos modificados.
+* Impacto técnico del cambio.
+* Relación del cambio con la Fase 1 del proyecto.
+* Riesgos o puntos de atención.
+* Validaciones recomendadas.
+* Observación final sobre si el Pull Request parece seguro para fusionarse con `main`, siempre que las validaciones pasen.
+
+### Dónde se puede ver el resumen
+
+El resumen generado por la IA puede revisarse en tres lugares:
+
+| Ubicación                     | Descripción                                                                            |
+| ----------------------------- | -------------------------------------------------------------------------------------- |
+| Comentario en el Pull Request | El workflow publica o actualiza automáticamente un comentario dentro del Pull Request. |
+| Logs de GitHub Actions        | El resumen se imprime en el paso `Mostrar resumen en logs`.                            |
+| Artifact descargable          | El archivo `resumen_ai.md` se guarda como artifact bajo el nombre `resumen-ai-pr`.     |
+
+### Checklist automático de revisión
+
+El workflow también agrega un checklist automático para apoyar la revisión del Pull Request antes de fusionarlo a `main`. Este checklist puede incluir verificaciones como:
+
+```text
+- El workflow principal CI - Validacion Fase 1 está en verde.
+- El Pull Request fue revisado antes de fusionarse a main.
+- Los cambios son coherentes con el objetivo de Fase 1.
+- La estructura del repositorio se mantiene ordenada.
+- El notebook F1_Definicion.ipynb fue ejecutado sin errores, si fue modificado.
+- El README mantiene formato y contenido actualizado, si fue modificado.
+- El dataset mantiene columnas y estructura esperada, si fue modificado.
+- Los workflows funcionan correctamente, si se modificó CI/CD.
+- La documentación técnica y el mapa conceptual están actualizados, si se modificó docs/.
+- Los anexos o informe de Fase 1 están correctamente ubicados, si se modificó reports/.
+```
+
+### Relación con la reproducibilidad
+
+La incorporación de GitHub Models fortalece la trazabilidad y documentación del proyecto, ya que cada Pull Request recibe una explicación automática sobre los cambios realizados y su posible impacto técnico.
+
+Este workflow no reemplaza al CI/CD principal, sino que lo complementa. Mientras el workflow `CI - Validacion Fase 1` verifica estructura, dependencias, dataset y columnas principales, el workflow `AI - Resumen de Pull Request` apoya la revisión documental y colaborativa mediante una síntesis generada automáticamente.
 
 ## Vinculación con el mapa conceptual
 
