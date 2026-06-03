@@ -2,10 +2,10 @@
 
 ## Integrantes
 
-- Wilson Arévalo
-- Lucas Espinosa
-- Eduardo Garrido
-- Mauricio Ortega
+- Wilson Arévalo.
+- Luis Espinosa.
+- Eduardo Sanhueza.
+- Mauricio Ortega.
 
 ---
 
@@ -254,106 +254,153 @@ Para organizar el trabajo colaborativo y evitar modificar directamente la rama p
 
 La rama `main` se mantiene como la versión estable del proyecto. Los cambios se trabajan primero en ramas secundarias tipo `feature/`, luego se validan mediante GitHub Actions y finalmente se integran a `main` mediante Pull Request, siempre que las validaciones sean exitosas.
 
+Esta estrategia permite mantener trazabilidad, separar responsabilidades, reducir errores en la rama principal y evidenciar buenas prácticas de control de versiones durante la Fase 1.
+
 ### Rama principal
 
 | Rama | Uso |
 |---|---|
 | `main` | Contiene la versión estable del proyecto. En esta rama se mantiene la estructura validada del repositorio, el README actualizado, el notebook principal, el dataset, la documentación y los archivos de configuración ya revisados. |
 
-### Ramas de trabajo implementadas
+### Ramas implementadas
 
-| Rama | Uso principal | Archivos o carpetas asociadas |
+| Rama | Propósito | Archivos o carpetas asociadas |
 |---|---|---|
-| `feature/actualizar-notebook-f1` | Actualización del notebook principal de Fase 1. | `notebooks/F1_Definicion.ipynb` |
-| `feature/actualizar-readme` | Mejora de la documentación principal del proyecto. | `README.md` |
-| `feature/documentacion-fase1` | Incorporación de documentos de apoyo, mapa conceptual, anexos y evidencias. | `docs/`, `reports/fase1/` |
-| `feature/ci-cd` | Modificación y prueba del workflow de integración continua. | `.github/workflows/main.yml` |
-| `feature/dataset-validacion` | Revisión del dataset y sus validaciones iniciales. | `data/` |
+| `feature/actualizar-notebook-f1` | Actualizar y mejorar el notebook principal de la Fase 1. | `notebooks/F1_Definicion.ipynb` |
+| `feature/actualizar-readme` | Mejorar la documentación principal del repositorio. | `README.md` |
+| `feature/documentacion-fase1` | Incorporar documentos, evidencias, anexos y material de apoyo de la Fase 1. | `docs/`, `reports/fase1/` |
+| `feature/ci-cd` | Ajustar y probar la configuración de integración continua. | `.github/workflows/main.yml` |
+| `feature/dataset-validacion` | Revisar la ubicación, estructura y validación inicial del dataset. | `data/`, `data/raw/clean_gym_data.csv` |
 
 ---
 
-## Uso de las ramas implementadas
+## Explicación de las ramas implementadas y sus validaciones
 
-### `feature/actualizar-notebook-f1`
+### 1. Rama `feature/actualizar-notebook-f1`
 
-Esta rama se utiliza para realizar modificaciones sobre el notebook principal de la Fase 1.
+Esta rama se utiliza para trabajar exclusivamente en el notebook principal de la Fase 1. Permite modificar el archivo `F1_Definicion.ipynb` sin afectar directamente la rama estable `main`.
 
-**Uso esperado:**
+**Uso de la rama:**
 
 - Agregar o corregir celdas Markdown.
 - Actualizar la problemática, objetivos o preguntas de análisis.
-- Corregir la carga del dataset.
-- Agregar revisiones iniciales de columnas, tipos de datos, nulos o duplicados.
-- Incorporar visualizaciones preliminares.
+- Mejorar la descripción del dataset.
+- Corregir la carga del archivo `clean_gym_data.csv`.
+- Agregar revisión de dimensiones, columnas, tipos de datos, valores nulos y duplicados.
+- Incorporar funciones simples de exploración.
+- Agregar visualizaciones preliminares.
 - Verificar que el notebook se ejecute sin errores.
 
-**Validación asociada:**
+**Validaciones asociadas mediante CI/CD:**
 
-- Verifica que el notebook exista en `notebooks/F1_Definicion.ipynb`.
-- Verifica que el dataset siga disponible en `data/raw/clean_gym_data.csv`.
-- Comprueba que las dependencias estén declaradas en `requirements.txt`.
-- Comprueba que el dataset pueda cargarse correctamente con Python y Pandas.
+- Comprueba que exista el archivo `notebooks/F1_Definicion.ipynb`.
+- Comprueba que el dataset exista en `data/raw/clean_gym_data.csv`.
+- Instala las dependencias declaradas en `requirements.txt`.
+- Verifica que el dataset pueda cargarse correctamente con Python y Pandas.
+- Valida que el dataset contenga filas y columnas.
+- Verifica que las columnas principales esperadas estén presentes.
 
-### `feature/actualizar-readme`
+**Importancia dentro del proyecto:**
 
-Esta rama se utiliza para modificar la documentación principal del proyecto.
+Esta rama permite asegurar que el notebook mantenga coherencia con la problemática, el dataset, el README y el flujo reproducible definido para la Fase 1.
 
-**Uso esperado:**
+---
 
-- Mejorar la descripción del proyecto.
+### 2. Rama `feature/actualizar-readme`
+
+Esta rama se utiliza para modificar y mejorar el archivo `README.md`, que corresponde a la documentación principal del repositorio.
+
+**Uso de la rama:**
+
+- Actualizar la descripción general del proyecto.
 - Agregar o corregir integrantes.
-- Documentar problemática, objetivos y preguntas de análisis.
+- Documentar la problemática, objetivos y preguntas de análisis.
+- Explicar el dataset utilizado.
+- Documentar las variables principales.
 - Explicar la estructura del repositorio.
-- Incluir instrucciones para ejecutar el notebook.
-- Documentar el uso de GitHub Actions y CI/CD.
-- Agregar información sobre reproducibilidad técnica.
+- Agregar instrucciones para instalar dependencias.
+- Explicar cómo ejecutar el notebook.
+- Documentar el uso de ramas, commits, Pull Requests y CI/CD.
+- Incorporar referencias iniciales del proyecto.
 
-**Validación asociada:**
+**Validaciones asociadas mediante CI/CD:**
 
-- Verifica que el archivo `README.md` exista.
-- Verifica que la estructura general del repositorio no se vea afectada.
-- Verifica que el resto de archivos necesarios para reproducibilidad sigan presentes.
+- Comprueba que exista el archivo `README.md`.
+- Verifica que la estructura general del repositorio no se vea afectada por los cambios de documentación.
+- Comprueba que sigan presentes `requirements.txt`, el dataset y el notebook.
+- Ejecuta la carga del dataset para confirmar que la documentación no esté desconectada de la estructura real del proyecto.
 
-### `feature/documentacion-fase1`
+**Importancia dentro del proyecto:**
 
-Esta rama se utiliza para incorporar documentos de apoyo, anexos, evidencias y archivos relacionados con la documentación formal de la Fase 1.
+Esta rama ayuda a mantener una documentación clara, actualizada y coherente con la implementación técnica del repositorio.
 
-**Uso esperado:**
+---
+
+### 3. Rama `feature/documentacion-fase1`
+
+Esta rama se utiliza para incorporar documentos de apoyo, evidencias, anexos y archivos formales relacionados con la Fase 1.
+
+**Uso de la rama:**
 
 - Agregar el mapa conceptual final.
-- Agregar evidencias del repositorio.
-- Incorporar capturas del workflow de GitHub Actions.
+- Incorporar el informe técnico de Fase 1.
+- Guardar capturas de pantalla del repositorio.
+- Guardar evidencias del workflow de GitHub Actions.
 - Guardar evidencias del notebook ejecutado.
+- Incluir capturas del historial de commits.
 - Agregar referencias o documentos complementarios.
-- Preparar anexos técnicos del informe.
+- Preparar anexos técnicos para el informe final.
 
-**Validación asociada:**
+**Carpetas relacionadas:**
 
-- Verifica que la carpeta `docs` exista.
-- Verifica que la carpeta `reports` exista.
-- Verifica que los archivos principales del proyecto se mantengan disponibles.
-- Verifica que los cambios de documentación no rompan la estructura base del repositorio.
+```text
+docs/
+reports/fase1/
+```
 
-### `feature/ci-cd`
+**Validaciones asociadas mediante CI/CD:**
 
-Esta rama se utiliza para modificar y probar la configuración de integración continua mediante GitHub Actions.
+- Comprueba que exista la carpeta `docs`.
+- Comprueba que exista la carpeta `reports`.
+- Verifica que los cambios de documentación no eliminen archivos clave del proyecto.
+- Comprueba que el README, el dataset, el notebook y las dependencias sigan disponibles.
+- Ejecuta la carga del dataset para confirmar que la estructura reproducible no se haya roto.
 
-**Uso esperado:**
+**Importancia dentro del proyecto:**
 
-- Ajustar el workflow de GitHub Actions.
-- Validar que el CI se ejecute en ramas `feature/`.
-- Revisar que se instalen correctamente las dependencias.
-- Verificar la carga automática del dataset.
-- Confirmar que el workflow detecte errores de estructura.
-- Mantener una validación automática antes de integrar cambios a `main`.
+Esta rama centraliza los documentos formales y evidencias de la Fase 1, permitiendo separar la documentación del código y mantener ordenado el repositorio.
 
-**Validación asociada:**
+---
 
-El workflow `CI - Validacion Fase 1` ejecuta las siguientes comprobaciones:
+### 4. Rama `feature/ci-cd`
+
+Esta rama se utiliza para modificar, probar y mejorar la configuración de integración continua mediante GitHub Actions.
+
+**Uso de la rama:**
+
+- Editar el archivo `.github/workflows/main.yml`.
+- Agregar validación automática para ramas `feature/`.
+- Verificar que se instalen correctamente las dependencias.
+- Validar la estructura del repositorio.
+- Confirmar que el dataset se pueda cargar correctamente.
+- Detectar errores de nombres de archivos, rutas o carpetas.
+- Mejorar los mensajes de error del workflow.
+- Preparar el flujo para Pull Requests hacia `main`.
+
+**Archivo relacionado:**
+
+```text
+.github/workflows/main.yml
+```
+
+**Validaciones asociadas mediante CI/CD:**
+
+El workflow `CI - Validacion Fase 1` realiza las siguientes comprobaciones:
 
 - Descarga el repositorio.
 - Configura Python 3.11.
 - Instala las dependencias desde `requirements.txt`.
+- Muestra la estructura inicial del repositorio.
 - Verifica la existencia de archivos clave:
   - `README.md`
   - `requirements.txt`
@@ -365,33 +412,65 @@ El workflow `CI - Validacion Fase 1` ejecuta las siguientes comprobaciones:
   - `docs`
   - `reports`
 - Carga el dataset mediante Pandas.
-- Comprueba que el dataset tenga filas y columnas.
+- Verifica que el dataset tenga filas y columnas.
 - Valida que existan las columnas principales esperadas.
 
-### `feature/dataset-validacion`
+**Importancia dentro del proyecto:**
 
-Esta rama se utiliza para trabajar cambios relacionados con el dataset y sus validaciones iniciales.
-
-**Uso esperado:**
-
-- Verificar que el dataset original esté correctamente ubicado.
-- Confirmar que el archivo `clean_gym_data.csv` no haya sido modificado accidentalmente.
-- Revisar columnas principales.
-- Preparar posibles validaciones futuras sobre estructura, tipos de datos o valores faltantes.
-- Mantener separado el dataset original de futuras versiones procesadas.
-
-**Validación asociada:**
-
-- Verifica que exista el archivo `data/raw/clean_gym_data.csv`.
-- Verifica que el archivo pueda ser leído correctamente con Pandas.
-- Verifica que el dataset no esté vacío.
-- Verifica que estén presentes las columnas principales esperadas, como `country`, `region`, `year`, `gym_memberships`, `gdp_per_capita_usd`, `obesity_rate`, entre otras.
+Esta rama permite probar cambios en el flujo automatizado sin afectar la rama principal. Además, fortalece la reproducibilidad técnica, ya que el proyecto se valida automáticamente antes de integrar cambios.
 
 ---
 
-## Flujo de trabajo implementado
+### 5. Rama `feature/dataset-validacion`
 
-El flujo de trabajo actual se organiza de la siguiente forma:
+Esta rama se utiliza para revisar aspectos relacionados con el dataset y sus validaciones iniciales.
+
+**Uso de la rama:**
+
+- Confirmar que el dataset original esté en la carpeta correcta.
+- Verificar que el archivo `clean_gym_data.csv` no haya sido modificado accidentalmente.
+- Revisar las columnas principales.
+- Comprobar que el archivo pueda ser leído con Pandas.
+- Preparar futuras validaciones sobre tipos de datos, valores nulos o consistencia del dataset.
+- Mantener separado el dataset original de futuras versiones procesadas.
+
+**Carpeta relacionada:**
+
+```text
+data/raw/
+```
+
+**Validaciones asociadas mediante CI/CD:**
+
+- Comprueba que exista el archivo `data/raw/clean_gym_data.csv`.
+- Verifica que el archivo pueda ser cargado correctamente con Pandas.
+- Verifica que el dataset no esté vacío.
+- Comprueba que tenga filas y columnas.
+- Valida que estén presentes columnas como:
+  - `country`
+  - `region`
+  - `year`
+  - `gym_memberships`
+  - `fitness_participation_rate`
+  - `total_health_club_revenue_usd`
+  - `number_of_gyms`
+  - `gym_penetration_rate`
+  - `urban_population_percentage`
+  - `obesity_rate`
+  - `gdp_per_capita_usd`
+  - `population_total`
+  - `average_membership_cost_usd`
+  - `insufficient_physical_activity_pct`
+
+**Importancia dentro del proyecto:**
+
+Esta rama permite proteger la integridad del dataset original y asegurar que las futuras fases del análisis se construyan sobre una base de datos disponible, legible y estructuralmente válida.
+
+---
+
+## Flujo de trabajo con ramas
+
+El flujo de trabajo implementado se organiza de la siguiente manera:
 
 ```text
 main
@@ -406,6 +485,24 @@ main
 Cada rama se utiliza para un tipo de cambio específico. Una vez que los cambios están listos, se realiza un commit descriptivo y se hace push a GitHub. Luego, GitHub Actions ejecuta automáticamente las validaciones configuradas en `.github/workflows/main.yml`.
 
 Si las validaciones pasan correctamente, los cambios pueden integrarse a `main` mediante Pull Request. Si las validaciones fallan, se corrigen los errores en la misma rama y se realiza un nuevo commit hasta obtener un resultado exitoso.
+
+---
+
+## Relación entre ramas, CI/CD y reproducibilidad
+
+El uso de ramas permite mantener una trazabilidad clara de los cambios realizados durante la Fase 1. Cada rama separa una responsabilidad específica del proyecto, lo que facilita identificar qué se modificó, por qué se modificó y qué evidencia técnica respalda ese cambio.
+
+La integración con GitHub Actions permite validar automáticamente que los cambios no rompan la estructura base del repositorio. De esta forma, el equipo puede detectar errores tempranos en archivos, rutas, dependencias o carga del dataset.
+
+Esta estrategia fortalece la reproducibilidad técnica del proyecto, ya que combina:
+
+- Ramas de trabajo separadas por propósito.
+- Commits descriptivos.
+- Pull Requests antes de integrar cambios a `main`.
+- Validación automática con GitHub Actions.
+- Documentación técnica en README y notebook.
+- Dataset ubicado en una ruta estable.
+- Dependencias declaradas en `requirements.txt`.
 
 ---
 
