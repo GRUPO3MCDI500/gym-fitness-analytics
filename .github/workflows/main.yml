@@ -46,7 +46,7 @@ jobs:
       - name: Ejecutar notebook Fase 1
         working-directory: notebooks
         run: |
-          jupyter nbconvert --to notebook --execute F1_Definicion.ipynb --output F1_Definicion_ejecutado.ipynb --ExecutePreprocessor.timeout=300
+          jupyter nbconvert --to notebook --execute F1_Definicion.ipynb --output F1_Definicion_ejecutado.ipynb --ExecutePreprocessor.timeout=300 --ExecutePreprocessor.kernel_name=python3
 
       - name: Verificar estructura del repositorio
         run: |
