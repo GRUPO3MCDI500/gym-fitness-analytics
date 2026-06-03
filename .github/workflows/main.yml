@@ -16,6 +16,21 @@ jobs:
       - name: Descargar repositorio
         uses: actions/checkout@v4
 
+      - name: Mostrar estructura inicial
+        run: |
+          echo "Contenido raiz:"
+          ls -la
+          echo "Contenido data:"
+          ls -la data || true
+          echo "Contenido data/raw:"
+          ls -la data/raw || true
+          echo "Contenido notebooks:"
+          ls -la notebooks || true
+          echo "Contenido docs:"
+          ls -la docs || true
+          echo "Contenido reports:"
+          ls -la reports || true
+
       - name: Configurar Python
         uses: actions/setup-python@v5
         with:
@@ -29,14 +44,14 @@ jobs:
 
       - name: Verificar estructura del repositorio
         run: |
-          test -f README.md
-          test -f requirements.txt
-          test -f data/raw/clean_gym_data.csv
-          test -f notebooks/F1_Definicion.ipynb
-          test -d data
-          test -d notebooks
-          test -d docs
-          test -d reports
+          test -f README.md || (echo "Falta README.md" && exit 1)
+          test -f requirements.txt || (echo "Falta requirements.txt" && exit 1)
+          test -f data/raw/clean_gym_data.csv || (echo "Falta data/raw/clean_gym_data.csv" && exit 1)
+          test -f notebooks/F1_Definicion.ipynb || (echo "Falta notebooks/F1_Definicion.ipynb" && exit 1)
+          test -d data || (echo "Falta carpeta data" && exit 1)
+          test -d notebooks || (echo "Falta carpeta notebooks" && exit 1)
+          test -d docs || (echo "Falta carpeta docs" && exit 1)
+          test -d reports || (echo "Falta carpeta reports" && exit 1)
 
       - name: Verificar carga del dataset
         run: |
