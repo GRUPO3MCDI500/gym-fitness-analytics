@@ -4,8 +4,8 @@
 
 - Wilson Arévalo
 - Lucas Espinosa
-- Integrante 3: __________________________
-- Integrante 4: __________________________
+- Eduardo Garrido
+- Mauricio Ortega
 
 ---
 
@@ -15,7 +15,7 @@ Este proyecto corresponde a la Fase 1 del ABP y tiene como propósito iniciar un
 
 El análisis se basa en un dataset que contiene información sobre membresías de gimnasio, participación fitness, ingresos del sector, cantidad de gimnasios, tasa de penetración, PIB per cápita, urbanización, obesidad e inactividad física en distintos países y regiones.
 
-En esta primera fase se define la problemática, se formulan los objetivos, se organiza el repositorio, se configura el entorno inicial de trabajo, se crea el notebook base y se documentan las primeras decisiones técnicas del proyecto.
+En esta primera fase se define la problemática, se formulan los objetivos, se organiza el repositorio, se configura el entorno inicial de trabajo, se crea el notebook base, se documentan las primeras decisiones técnicas y se implementa una validación automática mediante GitHub Actions.
 
 ---
 
@@ -248,6 +248,167 @@ Agregar informe técnico de Fase 1
 
 ---
 
+## Estrategia de ramas del repositorio
+
+Para organizar el trabajo colaborativo y evitar modificar directamente la rama principal `main`, se definió una estrategia de ramas basada en componentes del proyecto. Cada rama tiene un propósito específico y permite desarrollar, validar y documentar cambios antes de integrarlos a la versión principal del repositorio.
+
+La rama `main` se mantiene como la versión estable del proyecto. Los cambios se trabajan primero en ramas secundarias tipo `feature/`, luego se validan mediante GitHub Actions y finalmente se integran a `main` mediante Pull Request, siempre que las validaciones sean exitosas.
+
+### Rama principal
+
+| Rama | Uso |
+|---|---|
+| `main` | Contiene la versión estable del proyecto. En esta rama se mantiene la estructura validada del repositorio, el README actualizado, el notebook principal, el dataset, la documentación y los archivos de configuración ya revisados. |
+
+### Ramas de trabajo implementadas
+
+| Rama | Uso principal | Archivos o carpetas asociadas |
+|---|---|---|
+| `feature/actualizar-notebook-f1` | Actualización del notebook principal de Fase 1. | `notebooks/F1_Definicion.ipynb` |
+| `feature/actualizar-readme` | Mejora de la documentación principal del proyecto. | `README.md` |
+| `feature/documentacion-fase1` | Incorporación de documentos de apoyo, mapa conceptual, anexos y evidencias. | `docs/`, `reports/fase1/` |
+| `feature/ci-cd` | Modificación y prueba del workflow de integración continua. | `.github/workflows/main.yml` |
+| `feature/dataset-validacion` | Revisión del dataset y sus validaciones iniciales. | `data/` |
+
+---
+
+## Uso de las ramas implementadas
+
+### `feature/actualizar-notebook-f1`
+
+Esta rama se utiliza para realizar modificaciones sobre el notebook principal de la Fase 1.
+
+**Uso esperado:**
+
+- Agregar o corregir celdas Markdown.
+- Actualizar la problemática, objetivos o preguntas de análisis.
+- Corregir la carga del dataset.
+- Agregar revisiones iniciales de columnas, tipos de datos, nulos o duplicados.
+- Incorporar visualizaciones preliminares.
+- Verificar que el notebook se ejecute sin errores.
+
+**Validación asociada:**
+
+- Verifica que el notebook exista en `notebooks/F1_Definicion.ipynb`.
+- Verifica que el dataset siga disponible en `data/raw/clean_gym_data.csv`.
+- Comprueba que las dependencias estén declaradas en `requirements.txt`.
+- Comprueba que el dataset pueda cargarse correctamente con Python y Pandas.
+
+### `feature/actualizar-readme`
+
+Esta rama se utiliza para modificar la documentación principal del proyecto.
+
+**Uso esperado:**
+
+- Mejorar la descripción del proyecto.
+- Agregar o corregir integrantes.
+- Documentar problemática, objetivos y preguntas de análisis.
+- Explicar la estructura del repositorio.
+- Incluir instrucciones para ejecutar el notebook.
+- Documentar el uso de GitHub Actions y CI/CD.
+- Agregar información sobre reproducibilidad técnica.
+
+**Validación asociada:**
+
+- Verifica que el archivo `README.md` exista.
+- Verifica que la estructura general del repositorio no se vea afectada.
+- Verifica que el resto de archivos necesarios para reproducibilidad sigan presentes.
+
+### `feature/documentacion-fase1`
+
+Esta rama se utiliza para incorporar documentos de apoyo, anexos, evidencias y archivos relacionados con la documentación formal de la Fase 1.
+
+**Uso esperado:**
+
+- Agregar el mapa conceptual final.
+- Agregar evidencias del repositorio.
+- Incorporar capturas del workflow de GitHub Actions.
+- Guardar evidencias del notebook ejecutado.
+- Agregar referencias o documentos complementarios.
+- Preparar anexos técnicos del informe.
+
+**Validación asociada:**
+
+- Verifica que la carpeta `docs` exista.
+- Verifica que la carpeta `reports` exista.
+- Verifica que los archivos principales del proyecto se mantengan disponibles.
+- Verifica que los cambios de documentación no rompan la estructura base del repositorio.
+
+### `feature/ci-cd`
+
+Esta rama se utiliza para modificar y probar la configuración de integración continua mediante GitHub Actions.
+
+**Uso esperado:**
+
+- Ajustar el workflow de GitHub Actions.
+- Validar que el CI se ejecute en ramas `feature/`.
+- Revisar que se instalen correctamente las dependencias.
+- Verificar la carga automática del dataset.
+- Confirmar que el workflow detecte errores de estructura.
+- Mantener una validación automática antes de integrar cambios a `main`.
+
+**Validación asociada:**
+
+El workflow `CI - Validacion Fase 1` ejecuta las siguientes comprobaciones:
+
+- Descarga el repositorio.
+- Configura Python 3.11.
+- Instala las dependencias desde `requirements.txt`.
+- Verifica la existencia de archivos clave:
+  - `README.md`
+  - `requirements.txt`
+  - `data/raw/clean_gym_data.csv`
+  - `notebooks/F1_Definicion.ipynb`
+- Verifica la existencia de carpetas clave:
+  - `data`
+  - `notebooks`
+  - `docs`
+  - `reports`
+- Carga el dataset mediante Pandas.
+- Comprueba que el dataset tenga filas y columnas.
+- Valida que existan las columnas principales esperadas.
+
+### `feature/dataset-validacion`
+
+Esta rama se utiliza para trabajar cambios relacionados con el dataset y sus validaciones iniciales.
+
+**Uso esperado:**
+
+- Verificar que el dataset original esté correctamente ubicado.
+- Confirmar que el archivo `clean_gym_data.csv` no haya sido modificado accidentalmente.
+- Revisar columnas principales.
+- Preparar posibles validaciones futuras sobre estructura, tipos de datos o valores faltantes.
+- Mantener separado el dataset original de futuras versiones procesadas.
+
+**Validación asociada:**
+
+- Verifica que exista el archivo `data/raw/clean_gym_data.csv`.
+- Verifica que el archivo pueda ser leído correctamente con Pandas.
+- Verifica que el dataset no esté vacío.
+- Verifica que estén presentes las columnas principales esperadas, como `country`, `region`, `year`, `gym_memberships`, `gdp_per_capita_usd`, `obesity_rate`, entre otras.
+
+---
+
+## Flujo de trabajo implementado
+
+El flujo de trabajo actual se organiza de la siguiente forma:
+
+```text
+main
+│
+├── feature/actualizar-notebook-f1
+├── feature/actualizar-readme
+├── feature/documentacion-fase1
+├── feature/ci-cd
+└── feature/dataset-validacion
+```
+
+Cada rama se utiliza para un tipo de cambio específico. Una vez que los cambios están listos, se realiza un commit descriptivo y se hace push a GitHub. Luego, GitHub Actions ejecuta automáticamente las validaciones configuradas en `.github/workflows/main.yml`.
+
+Si las validaciones pasan correctamente, los cambios pueden integrarse a `main` mediante Pull Request. Si las validaciones fallan, se corrigen los errores en la misma rama y se realiza un nuevo commit hasta obtener un resultado exitoso.
+
+---
+
 ## CI/CD con GitHub Actions
 
 Se implementó un workflow de integración continua mediante GitHub Actions, ubicado en:
@@ -256,7 +417,9 @@ Se implementó un workflow de integración continua mediante GitHub Actions, ubi
 .github/workflows/main.yml
 ```
 
-Este workflow se ejecuta automáticamente ante cada actualización en la rama `main` y cumple las siguientes funciones:
+Este workflow se ejecuta automáticamente ante cada actualización en la rama `main`, en ramas `feature/` y en Pull Requests dirigidos a `main`.
+
+El workflow cumple las siguientes funciones:
 
 - Descarga el repositorio.
 - Configura Python 3.11.
@@ -274,7 +437,7 @@ Este workflow se ejecuta automáticamente ante cada actualización en la rama `m
 | Workflow | CI - Validacion Fase 1 |
 | Job | validar-proyecto |
 | Archivo | `.github/workflows/main.yml` |
-| Evento de ejecución | push a la rama `main` |
+| Evento de ejecución | push a `main`, push a ramas `feature/` y Pull Request hacia `main` |
 | Estado esperado | exitoso |
 
 La implementación de CI/CD permite detectar errores tempranos de estructura, dependencias o carga del dataset, aportando a la reproducibilidad técnica del proyecto.
@@ -296,6 +459,7 @@ En esta Fase 1 se materializan los siguientes componentes del mapa:
 - Registro de dependencias en `requirements.txt`.
 - Uso de Git/GitHub para trazabilidad.
 - Implementación de validación automática mediante GitHub Actions.
+- Organización de ramas de trabajo para separar cambios y validar actualizaciones antes de integrarlas a `main`.
 
 Quedan proyectados para fases posteriores:
 
@@ -312,7 +476,7 @@ Quedan proyectados para fases posteriores:
 
 **Fase actual:** Fase 1 - Implementación inicial del entorno reproducible y documentación técnica.
 
-En esta fase se define la problemática, se organiza el repositorio, se configura el entorno inicial, se crea el notebook de definición, se documentan las primeras decisiones técnicas y se valida automáticamente la estructura del proyecto mediante GitHub Actions.
+En esta fase se define la problemática, se organiza el repositorio, se configura el entorno inicial, se crea el notebook de definición, se documentan las primeras decisiones técnicas, se implementan ramas de trabajo y se valida automáticamente la estructura del proyecto mediante GitHub Actions.
 
 ---
 
