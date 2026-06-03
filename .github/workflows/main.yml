@@ -43,6 +43,11 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Ejecutar notebook Fase 1
+        working-directory: notebooks
+        run: |
+          jupyter nbconvert --to notebook --execute F1_Definicion.ipynb --output F1_Definicion_ejecutado.ipynb --ExecutePreprocessor.timeout=300
+
       - name: Verificar estructura del repositorio
         run: |
           test -f README.md || (echo "Falta README.md" && exit 1)
