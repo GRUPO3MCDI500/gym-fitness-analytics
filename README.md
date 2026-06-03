@@ -3,7 +3,7 @@
 ## Integrantes
 
 - Wilson Arévalo
-- Integrante 2: __________________________
+- Lucas Espinoza
 - Integrante 3: __________________________
 - Integrante 4: __________________________
 
