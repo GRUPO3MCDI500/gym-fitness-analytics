@@ -1,4 +1,4 @@
-nname: AI - Resumen de Pull Request
+name: AI - Resumen de Pull Request
 
 on:
   pull_request:
@@ -40,43 +40,63 @@ jobs:
         run: |
           tipo="mixto"
 
-          if grep -q "^notebooks/F1_Definicion.ipynb" cambios.txt; then
-            tipo="notebook"
+          notebook=false
+          readme=false
+          dataset=false
+          cicd=false
+          docs=false
+          reports=false
+
+          if grep -q "^notebooks/" cambios.txt; then
+            notebook=true
           fi
 
           if grep -q "^README.md" cambios.txt; then
-            if [ "$tipo" = "mixto" ]; then
-              tipo="documentacion"
-            else
-              tipo="mixto"
-            fi
+            readme=true
           fi
 
           if grep -q "^data/" cambios.txt; then
-            if [ "$tipo" = "mixto" ]; then
-              tipo="dataset"
-            else
-              tipo="mixto"
-            fi
+            dataset=true
           fi
 
           if grep -q "^.github/workflows/" cambios.txt; then
-            if [ "$tipo" = "mixto" ]; then
-              tipo="ci-cd"
-            else
-              tipo="mixto"
-            fi
+            cicd=true
           fi
 
-          if grep -q "^docs/" cambios.txt || grep -q "^reports/" cambios.txt; then
-            if [ "$tipo" = "mixto" ]; then
-              tipo="evidencias"
-            else
-              tipo="mixto"
+          if grep -q "^docs/" cambios.txt; then
+            docs=true
+          fi
+
+          if grep -q "^reports/" cambios.txt; then
+            reports=true
+          fi
+
+          count=0
+          for value in "$notebook" "$readme" "$dataset" "$cicd" "$docs" "$reports"; do
+            if [ "$value" = true ]; then
+              count=$((count+1))
             fi
+          done
+
+          if [ "$count" -eq 1 ]; then
+            if [ "$notebook" = true ]; then tipo="notebook"; fi
+            if [ "$readme" = true ]; then tipo="documentacion"; fi
+            if [ "$dataset" = true ]; then tipo="dataset"; fi
+            if [ "$cicd" = true ]; then tipo="ci-cd"; fi
+            if [ "$docs" = true ]; then tipo="documentacion-tecnica"; fi
+            if [ "$reports" = true ]; then tipo="informe-evidencias"; fi
+          else
+            tipo="mixto"
           fi
 
           echo "tipo=$tipo" >> "$GITHUB_OUTPUT"
+          echo "notebook=$notebook" >> "$GITHUB_OUTPUT"
+          echo "readme=$readme" >> "$GITHUB_OUTPUT"
+          echo "dataset=$dataset" >> "$GITHUB_OUTPUT"
+          echo "cicd=$cicd" >> "$GITHUB_OUTPUT"
+          echo "docs=$docs" >> "$GITHUB_OUTPUT"
+          echo "reports=$reports" >> "$GITHUB_OUTPUT"
+
           echo "Tipo de cambio detectado: $tipo"
 
       - name: Crear contexto para el modelo
@@ -112,7 +132,7 @@ jobs:
             echo "- feature/ci-cd"
             echo "- feature/dataset-validacion"
             echo ""
-            echo "Indica si los cambios afectan documentacion, notebook, dataset, CI/CD, ramas o evidencias de Fase 1."
+            echo "Indica si los cambios afectan documentacion, notebook, dataset, CI/CD, ramas, informe, mapa conceptual o evidencias de Fase 1."
           } > contexto_pr.txt
 
           {
@@ -144,15 +164,19 @@ jobs:
             **Impacto tecnico:**
             Explica en 2 o 3 lineas que cambia y si afecta la reproducibilidad del proyecto.
 
+            **Relacion con Fase 1:**
+            Explica si el cambio aporta a la documentacion, notebook, repositorio, control de versiones, CI/CD o evidencias del entregable.
+
+            **Riesgos o puntos de atencion:**
+            Indica si existe algun riesgo tecnico, por ejemplo rutas rotas, dependencias faltantes, cambios en dataset o documentacion desactualizada.
+
             **Validaciones recomendadas:**
             - Revisar que el workflow `CI - Validacion Fase 1` pase correctamente.
             - Ejecutar el notebook si se modifico `F1_Definicion.ipynb`.
             - Revisar README si se modifico la documentacion.
             - Verificar dataset si se modifico `data/raw/clean_gym_data.csv`.
             - Revisar workflow si se modifico `.github/workflows/`.
-
-            **Riesgos o puntos de atencion:**
-            Indica si existe algun riesgo tecnico, por ejemplo rutas rotas, dependencias faltantes, cambios en dataset o documentacion desactualizada.
+            - Verificar evidencias si se modifico `docs/` o `reports/`.
 
             **Observacion final:**
             Indica si el Pull Request parece seguro para fusionarse a `main`, siempre que las validaciones pasen.
@@ -174,11 +198,15 @@ jobs:
             echo "**Impacto tecnico:**"
             echo "No fue posible generar el resumen con GitHub Models. Se deja un resumen basico basado en los archivos modificados."
             echo ""
+            echo "**Relacion con Fase 1:**"
+            echo "Este Pull Request debe revisarse en funcion de su aporte al notebook, documentacion, repositorio, CI/CD o evidencias del entregable."
+            echo ""
             echo "**Validaciones recomendadas:**"
             echo "- Revisar que el workflow CI - Validacion Fase 1 pase correctamente."
             echo "- Ejecutar el notebook si se modifico F1_Definicion.ipynb."
             echo "- Revisar README si se modifico documentacion."
             echo "- Verificar dataset si se modifico data/raw/clean_gym_data.csv."
+            echo "- Revisar workflows si se modifico .github/workflows/."
             echo ""
             echo "**Observacion final:**"
             echo "El Pull Request debe revisarse manualmente antes de fusionarse a main."
@@ -191,6 +219,44 @@ jobs:
           ${{ steps.ai.outputs.response }}
           EOF
 
+      - name: Agregar checklist de revision
+        run: |
+          {
+            echo ""
+            echo "---"
+            echo ""
+            echo "## Checklist automatico de revision"
+            echo ""
+            echo "- [ ] El workflow principal CI - Validacion Fase 1 esta en verde."
+            echo "- [ ] El Pull Request fue revisado antes de fusionarse a main."
+            echo "- [ ] Los cambios son coherentes con el objetivo de Fase 1."
+            echo "- [ ] La estructura del repositorio se mantiene ordenada."
+          } >> resumen_ai.md
+
+          if [ "${{ steps.clasificacion.outputs.notebook }}" = "true" ]; then
+            echo "- [ ] Se ejecuto el notebook F1_Definicion.ipynb sin errores." >> resumen_ai.md
+          fi
+
+          if [ "${{ steps.clasificacion.outputs.readme }}" = "true" ]; then
+            echo "- [ ] Se reviso que el README mantenga formato y contenido actualizado." >> resumen_ai.md
+          fi
+
+          if [ "${{ steps.clasificacion.outputs.dataset }}" = "true" ]; then
+            echo "- [ ] Se verifico que el dataset mantenga columnas y estructura esperada." >> resumen_ai.md
+          fi
+
+          if [ "${{ steps.clasificacion.outputs.cicd }}" = "true" ]; then
+            echo "- [ ] Se reviso que los workflows funcionen correctamente." >> resumen_ai.md
+          fi
+
+          if [ "${{ steps.clasificacion.outputs.docs }}" = "true" ]; then
+            echo "- [ ] Se reviso que la documentacion tecnica y mapa conceptual esten actualizados." >> resumen_ai.md
+          fi
+
+          if [ "${{ steps.clasificacion.outputs.reports }}" = "true" ]; then
+            echo "- [ ] Se verifico que los anexos o informe de Fase 1 esten correctamente ubicados." >> resumen_ai.md
+          fi
+
       - name: Mostrar resumen en logs
         run: |
           echo "Resumen generado:"
@@ -202,16 +268,37 @@ jobs:
           name: resumen-ai-pr
           path: resumen_ai.md
 
-      - name: Comentar resumen en Pull Request
+      - name: Crear o actualizar comentario en Pull Request
         uses: actions/github-script@v7
         with:
           script: |
             const fs = require('fs');
-            const body = fs.readFileSync('resumen_ai.md', 'utf8');
+            const marker = '<!-- ai-pr-summary -->';
+            const body = marker + '\n' + fs.readFileSync('resumen_ai.md', 'utf8');
 
-            await github.rest.issues.createComment({
+            const { data: comments } = await github.rest.issues.listComments({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body
+              per_page: 100
             });
+
+            const previous = comments.find(comment =>
+              comment.body && comment.body.includes(marker)
+            );
+
+            if (previous) {
+              await github.rest.issues.updateComment({
+                comment_id: previous.id,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body
+              });
+            } else {
+              await github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body
+              });
+            }
