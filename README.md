@@ -4,18 +4,20 @@
 
 - Wilson Arévalo
 - Luis Espinosa
-- Eduardo Garrido
 - Mauricio Ortega
+- Eduardo Garrido
 
 ---
 
 ## Descripción del proyecto
 
-Este proyecto corresponde a la Fase 1 del ABP y tiene como propósito iniciar un flujo de trabajo reproducible para analizar la evolución global de la industria fitness y gimnasios entre los años 2000 y 2026.
+Este proyecto corresponde a la Fase 1 del ABP del curso **MCDI500 — Herramientas de software científico** y tiene como propósito iniciar un flujo de trabajo reproducible para analizar la evolución global de la industria fitness y gimnasios entre los años 2000 y 2026.
 
-El análisis se basa en un dataset que contiene información sobre membresías de gimnasio, participación fitness, ingresos del sector, cantidad de gimnasios, tasa de penetración, PIB per cápita, urbanización, obesidad e inactividad física en distintos países y regiones.
+El análisis se basa en el dataset **World Gym & Fitness Trends 2000-2026**, disponible en formato CSV bajo el archivo `clean_gym_data.csv`. Este conjunto de datos contiene información sobre membresías de gimnasio, participación fitness, ingresos del sector, cantidad de gimnasios, tasa de penetración, PIB per cápita, urbanización, obesidad e inactividad física en distintos países y regiones.
 
-En esta primera fase se define la problemática, se formulan los objetivos, se organiza el repositorio, se configura el entorno inicial de trabajo, se crea el notebook base, se documentan las primeras decisiones técnicas y se implementan validaciones automáticas mediante GitHub Actions. Además, se incorpora GitHub Models para apoyar la documentación automática de Pull Requests y una Wiki técnica para profundizar las decisiones metodológicas del proyecto.
+En esta primera fase se define la problemática, se formulan los objetivos, se organiza el repositorio, se configura el entorno inicial de trabajo, se crea el notebook base, se documentan las primeras decisiones técnicas y se implementan validaciones automáticas mediante GitHub Actions.
+
+Además, se incorpora GitHub Models para apoyar la documentación automática de Pull Requests y una Wiki técnica para profundizar las decisiones metodológicas, la trazabilidad del dataset, el flujo reproducible y la gestión de evidencias.
 
 ---
 
@@ -24,6 +26,8 @@ En esta primera fase se define la problemática, se formulan los objetivos, se o
 La industria fitness y de gimnasios ha crecido de manera desigual a nivel mundial entre 2000 y 2026. Existen diferencias importantes entre países y regiones en cuanto a membresías, número de gimnasios, ingresos del sector, acceso a servicios fitness y participación de la población en actividades físicas.
 
 A partir de esta situación, el proyecto busca comprender qué factores económicos, de acceso y de salud pública se relacionan con el crecimiento y adopción de la industria fitness a nivel global.
+
+Esta problemática requiere un análisis reproducible, ya que el estudio involucra múltiples variables, países, regiones y años. Por ello, el proyecto no solo se enfoca en analizar datos, sino también en documentar cómo se organizan, validan, versionan y reproducen los procesos técnicos asociados al análisis.
 
 ---
 
@@ -43,6 +47,7 @@ Analizar la evolución global de la industria fitness y gimnasios entre 2000 y 2
 - Configurar validaciones automáticas mediante GitHub Actions.
 - Ejecutar automáticamente el notebook en CI para comprobar su reproducibilidad.
 - Incorporar GitHub Models para generar resúmenes automáticos de Pull Requests.
+- Definir criterios iniciales para limpieza, validación y trazabilidad de datos.
 - Preparar la base técnica para las siguientes fases del proyecto ABP.
 
 ---
@@ -67,18 +72,21 @@ Analizar la evolución global de la industria fitness y gimnasios entre 2000 y 2
 | Fuente | Kaggle |
 | Periodo de análisis | 2000-2026 |
 | Unidad de análisis | Países y regiones |
+| Formato | CSV |
 | Ubicación | `data/raw/clean_gym_data.csv` |
+
+El archivo se mantiene en `data/raw/` para conservar una copia original sin modificaciones. En fases posteriores, cualquier versión transformada o procesada deberá almacenarse en `data/processed/`, manteniendo la trazabilidad entre el dato original y las versiones derivadas.
 
 ---
 
 ## Variables principales
 
-El dataset contiene variables relacionadas con industria fitness, economía y salud pública:
+El dataset contiene variables relacionadas con industria fitness, economía, territorio y salud pública:
 
 | Variable | Descripción general |
 |---|---|
 | `country` | País registrado en el dataset. |
-| `region` | Región geográfica del país. |
+| `region` | Región geográfica asociada al país. |
 | `year` | Año del registro. |
 | `gym_memberships` | Cantidad de membresías de gimnasio. |
 | `fitness_participation_rate` | Tasa de participación en actividades fitness. |
@@ -94,21 +102,80 @@ El dataset contiene variables relacionadas con industria fitness, economía y sa
 
 ---
 
+## Dimensiones de análisis
+
+Las variables del dataset permiten estudiar la problemática desde tres dimensiones principales.
+
+### 1. Industria fitness
+
+Incluye variables como:
+
+- `gym_memberships`
+- `fitness_participation_rate`
+- `total_health_club_revenue_usd`
+- `number_of_gyms`
+- `gym_penetration_rate`
+- `average_membership_cost_usd`
+
+Estas variables permiten observar el crecimiento del sector, la adopción de gimnasios, la participación fitness y los ingresos asociados a la industria.
+
+### 2. Economía y territorio
+
+Incluye variables como:
+
+- `gdp_per_capita_usd`
+- `urban_population_percentage`
+- `population_total`
+- `country`
+- `region`
+- `year`
+
+Estas variables permiten comparar países y regiones, observando si las condiciones económicas o urbanas se relacionan con el acceso a servicios fitness.
+
+### 3. Salud pública
+
+Incluye variables como:
+
+- `obesity_rate`
+- `insufficient_physical_activity_pct`
+- `fitness_participation_rate`
+- `gym_penetration_rate`
+
+Estas variables permiten explorar relaciones entre actividad física, obesidad, inactividad física y participación fitness.
+
+---
+
 ## Herramientas utilizadas
 
 | Herramienta | Uso dentro del proyecto |
 |---|---|
 | Python | Lenguaje principal para análisis de datos. |
-| Pandas | Carga, manipulación y exploración de datos. |
+| Pandas | Carga, manipulación y exploración del dataset. |
 | NumPy | Apoyo en operaciones numéricas. |
 | Matplotlib | Visualización inicial de datos. |
 | Jupyter Notebook | Desarrollo del análisis reproducible mediante código y celdas narrativas. |
 | Git | Control de versiones local. |
 | GitHub | Repositorio remoto y colaboración grupal. |
-| GitHub Desktop | Gestión visual de commits, cambios y sincronización con GitHub. |
+| GitHub Desktop | Gestión visual de commits, ramas y sincronización. |
 | GitHub Actions | Validación automática de estructura, dependencias, dataset y notebook. |
 | GitHub Models | Generación automática de resúmenes técnicos en Pull Requests. |
 | GitHub Wiki | Documentación técnica ampliada del proyecto. |
+
+---
+
+## Justificación técnica de herramientas
+
+El uso de estas herramientas responde a la necesidad de construir un flujo reproducible, trazable y colaborativo.
+
+- **Python y Pandas** permiten cargar, revisar y transformar el dataset de forma programática, evitando procesos manuales difíciles de replicar.
+- **Jupyter Notebook** permite integrar código, resultados, visualizaciones y explicación metodológica en un mismo documento ejecutable.
+- **Git y GitHub** permiten registrar la evolución del proyecto mediante commits, ramas y Pull Requests.
+- **requirements.txt** permite reconstruir el entorno de ejecución con las dependencias necesarias.
+- **GitHub Actions** permite validar automáticamente que la estructura, dependencias, dataset y notebook funcionen correctamente.
+- **GitHub Models** permite documentar automáticamente el impacto técnico de los cambios realizados en Pull Requests.
+- **GitHub Wiki** permite ampliar la documentación técnica sin sobrecargar el README.
+
+Esta combinación de herramientas permite que el proyecto no dependa exclusivamente del computador local de un integrante, sino que pueda ejecutarse, revisarse y validarse desde un entorno común.
 
 ---
 
@@ -166,7 +233,7 @@ gym-fitness-analytics/
 | `src/` | Guardará scripts reutilizables en fases futuras. |
 | `outputs/figures/` | Guardará gráficos generados durante el análisis. |
 | `outputs/tables/` | Guardará tablas derivadas del análisis. |
-| `docs/` | Contiene documentación de apoyo y mapa conceptual. |
+| `docs/` | Contiene documentación de apoyo, mapa conceptual y referencias técnicas. |
 | `reports/fase1/` | Contiene informe técnico y evidencias de la Fase 1. |
 | `.github/workflows/` | Contiene workflows de GitHub Actions. |
 
@@ -178,7 +245,7 @@ Para reproducir este proyecto, se recomienda clonar el repositorio, instalar las
 
 ### Instalación de dependencias
 
-Desde la carpeta raíz del repositorio, ejecutar:
+Desde la carpeta raíz del repositorio:
 
 ```bash
 pip install -r requirements.txt
@@ -198,7 +265,7 @@ ipykernel>=6.0.0
 nbconvert>=7.0.0
 ```
 
-### Ejecución del notebook
+### Ejecución local del notebook
 
 El notebook principal se encuentra en:
 
@@ -209,7 +276,7 @@ notebooks/F1_Definicion.ipynb
 Para ejecutarlo localmente:
 
 1. Abrir Jupyter Notebook o JupyterLab.
-2. Entrar a la carpeta del repositorio `gym-fitness-analytics`.
+2. Entrar a la carpeta del repositorio.
 3. Abrir la carpeta `notebooks`.
 4. Ejecutar el archivo `F1_Definicion.ipynb`.
 5. Ejecutar las celdas en orden.
@@ -223,6 +290,43 @@ DATA_PATH = Path("../data/raw/clean_gym_data.csv")
 ```
 
 Esta ruta permite que el notebook funcione correctamente siempre que se respete la estructura del repositorio.
+
+---
+
+## Flujo reproducible del proyecto
+
+El flujo reproducible se organiza en la siguiente secuencia:
+
+```text
+Definición del problema
+        ↓
+Adquisición y organización del dataset
+        ↓
+Exploración inicial
+        ↓
+Limpieza y preparación de datos
+        ↓
+Análisis exploratorio
+        ↓
+Visualización de resultados
+        ↓
+Interpretación y documentación
+        ↓
+Versionamiento y validación automática
+```
+
+Cada etapa cumple una función específica:
+
+| Etapa | Propósito |
+|---|---|
+| Definición | Delimitar problemática, objetivos y preguntas de análisis. |
+| Adquisición | Incorporar el dataset en `data/raw/`. |
+| Exploración | Revisar dimensiones, columnas, tipos, nulos y duplicados. |
+| Limpieza | Definir criterios para tratar datos faltantes, duplicados y valores atípicos. |
+| Análisis | Comparar países, regiones, años y relaciones entre variables. |
+| Visualización | Generar gráficos y tablas interpretables. |
+| Documentación | Registrar decisiones, hallazgos y configuraciones. |
+| Validación | Verificar estructura, dataset y notebook mediante GitHub Actions. |
 
 ---
 
@@ -274,15 +378,15 @@ Esta validación permite comprobar que:
 - El notebook no depende de un entorno local específico.
 - El análisis inicial puede reproducirse en un entorno limpio.
 
-El kernel se fuerza a `python3` para evitar errores asociados a kernels locales de Anaconda u otros entornos, como `conda-base-py`.
+El kernel se fuerza a `python3` para evitar errores asociados a kernels locales de Anaconda u otros entornos.
 
 ---
 
 ## Control de versiones
 
-El proyecto utiliza Git y GitHub para mantener trazabilidad de los avances. Los commits deben ser descriptivos y representar cambios específicos del proyecto.
+El proyecto utiliza Git y GitHub para mantener trazabilidad de los avances. Los commits deben ser descriptivos y representar cambios específicos.
 
-### Ejemplos de commits realizados o esperados
+### Ejemplos de commits
 
 ```text
 Crear estructura inicial del repositorio
@@ -301,11 +405,9 @@ Documentar Wiki del proyecto
 
 ---
 
-## Estrategia de ramas del repositorio
+## Estrategia de ramas
 
-Para organizar el trabajo colaborativo y evitar modificar directamente la rama principal `main`, se definió una estrategia de ramas basada en componentes del proyecto.
-
-La rama `main` se mantiene como la versión estable del proyecto. Los cambios se trabajan primero en ramas secundarias tipo `feature/`, luego se validan mediante GitHub Actions y finalmente se integran a `main` mediante Pull Request, siempre que las validaciones sean exitosas.
+La rama `main` se mantiene como la versión estable del proyecto. Los cambios se trabajan primero en ramas secundarias tipo `feature/`, luego se validan mediante GitHub Actions y finalmente se integran a `main` mediante Pull Request.
 
 ### Rama principal
 
@@ -324,9 +426,7 @@ La rama `main` se mantiene como la versión estable del proyecto. Los cambios se
 | `feature/dataset-validacion` | Revisar la ubicación, estructura y validación inicial del dataset. | `data/`, `data/raw/clean_gym_data.csv` |
 | `feature/github-models-pr-summary` | Implementar resumen automático de Pull Requests con GitHub Models. | `.github/workflows/ai-pr-summary.yml` |
 
----
-
-## Flujo de trabajo con ramas
+### Flujo de trabajo con ramas
 
 ```text
 main
@@ -494,7 +594,7 @@ El resumen automático generado por GitHub Models incluye:
 
 Además del README, el proyecto cuenta con una Wiki técnica para documentar de forma más detallada las decisiones metodológicas y técnicas del flujo reproducible.
 
-Páginas sugeridas o implementadas:
+Páginas implementadas o sugeridas:
 
 - `Home`
 - `Contexto del proyecto`
@@ -513,19 +613,23 @@ La Wiki permite profundizar en aspectos que en el README se presentan de forma r
 
 ---
 
-## Riesgos y limitaciones iniciales
+## Criterios iniciales de revisión del dataset
 
-El dataset y el proceso de análisis pueden presentar desafíos metodológicos que serán considerados en fases posteriores:
+Durante la exploración inicial se revisarán:
 
-- Posible presencia de datos estimados o modelados para años recientes.
-- Diferencias en la calidad de datos entre países.
-- Variables económicas o de salud pública provenientes de distintas fuentes.
-- Posibles valores atípicos asociados al periodo COVID-19.
-- Comparaciones afectadas por diferencias demográficas entre países.
-- Riesgo de interpretar correlaciones como causalidad.
-- Posibles registros incompletos o inconsistentes.
-
-Estos riesgos serán abordados mediante exploración inicial, documentación de decisiones, limpieza reproducible y validaciones técnicas.
+- Cantidad de filas y columnas.
+- Nombres de columnas.
+- Tipos de datos.
+- Valores nulos.
+- Registros duplicados.
+- Rango de años disponibles.
+- Cantidad de países representados.
+- Cantidad de regiones representadas.
+- Distribución temporal de registros.
+- Valores mínimos y máximos de variables numéricas.
+- Posibles valores atípicos.
+- Coherencia entre país, región y año.
+- Consistencia de columnas esperadas.
 
 ---
 
@@ -542,6 +646,22 @@ En fases posteriores, la limpieza del dataset deberá considerar:
 - Validar rangos razonables de variables numéricas.
 - Revisar consistencia temporal por país y año.
 - Mantener trazabilidad entre dataset original y dataset procesado.
+
+---
+
+## Riesgos y limitaciones iniciales
+
+El dataset y el proceso de análisis pueden presentar desafíos metodológicos que serán considerados en fases posteriores:
+
+- Posible presencia de datos estimados o modelados para años recientes.
+- Diferencias en la calidad de datos entre países.
+- Variables económicas o de salud pública provenientes de distintas fuentes.
+- Posibles valores atípicos asociados al periodo COVID-19.
+- Comparaciones afectadas por diferencias demográficas entre países.
+- Riesgo de interpretar correlaciones como causalidad.
+- Posibles registros incompletos o inconsistentes.
+
+Estos riesgos serán abordados mediante exploración inicial, documentación de decisiones, limpieza reproducible y validaciones técnicas.
 
 ---
 
