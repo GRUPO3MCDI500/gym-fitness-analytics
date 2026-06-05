@@ -43,10 +43,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Ejecutar notebook Fase 1
+      - name: Ejecutar notebook Fase 1 v2
         working-directory: notebooks
         run: |
-          jupyter nbconvert --to notebook --execute F1_Definicion.ipynb --output F1_Definicion_ejecutado.ipynb --ExecutePreprocessor.timeout=300 --ExecutePreprocessor.kernel_name=python3
+          jupyter nbconvert --to notebook --execute F1_Definicion_v2.ipynb --output F1_Definicion_v2_ejecutado.ipynb --ExecutePreprocessor.timeout=300 --ExecutePreprocessor.kernel_name=python3
 
       - name: Verificar estructura del repositorio
         run: |
@@ -54,6 +54,7 @@ jobs:
           test -f requirements.txt || (echo "Falta requirements.txt" && exit 1)
           test -f data/raw/clean_gym_data.csv || (echo "Falta data/raw/clean_gym_data.csv" && exit 1)
           test -f notebooks/F1_Definicion.ipynb || (echo "Falta notebooks/F1_Definicion.ipynb" && exit 1)
+          test -f notebooks/F1_Definicion_v2.ipynb || (echo "Falta notebooks/F1_Definicion_v2.ipynb" && exit 1)
           test -d data || (echo "Falta carpeta data" && exit 1)
           test -d notebooks || (echo "Falta carpeta notebooks" && exit 1)
           test -d docs || (echo "Falta carpeta docs" && exit 1)
