@@ -11,17 +11,21 @@
 
 ## Descripción del proyecto
 
-Este proyecto corresponde a la Fase 1 del ABP del curso **MCDI500 — Herramientas de software científico** y tiene como propósito iniciar un flujo de trabajo reproducible para analizar la evolución global de la industria fitness y gimnasios entre los años 2000 y 2026.
+Este proyecto corresponde al ABP del curso **MCDI500 — Programación para la Ciencia de Datos** y tiene como propósito iniciar un flujo de trabajo reproducible para analizar la evolución global de la industria fitness y gimnasios entre los años 2000 y 2026.
 
 El análisis se basa en el dataset **World Gym & Fitness Trends 2000-2026**, disponible en formato CSV bajo el archivo `clean_gym_data.csv`. Este conjunto de datos contiene información sobre membresías de gimnasio, participación fitness, ingresos del sector, cantidad de gimnasios, tasa de penetración, PIB per cápita, urbanización, obesidad e inactividad física en distintos países y regiones.
 
-En esta primera fase se define la problemática, se formulan los objetivos, se organiza el repositorio, se configura el entorno inicial de trabajo, se crea el notebook base, se documentan las primeras decisiones técnicas y se implementan validaciones automáticas mediante GitHub Actions.
+En la Fase 1 se define la problemática, se formulan los objetivos, se organiza el repositorio, se configura el entorno inicial de trabajo, se crea el notebook base, se documentan las primeras decisiones técnicas y se implementan validaciones automáticas mediante GitHub Actions.
 
 Además, se incorpora GitHub Models para apoyar la documentación automática de Pull Requests y una Wiki técnica para profundizar las decisiones metodológicas, la trazabilidad del dataset, el flujo reproducible y la gestión de evidencias.
 
 En la Fase 2 se incorpora el notebook de obtención, limpieza, depuración, transformación y validación técnica del dataset. Esta fase complementa el trabajo realizado en la Fase 1, avanzando desde la definición y exploración inicial hacia la preparación técnica de los datos para análisis posteriores.
 
 El proceso de Fase 2 mantiene la trazabilidad entre el archivo original ubicado en `data/raw/clean_gym_data.csv` y el archivo procesado generado en `data/processed/gym_data_processed.csv`, asegurando que las transformaciones aplicadas sean reproducibles, documentadas y verificables.
+
+En la Fase 3 se incorpora el núcleo algorítmico del proyecto mediante notebooks ubicados en `src/fase3/`. Esta fase implementa programación estructurada, recursividad, estrategias divide and conquer, exploración de grafos mediante DFS recursivo, mediciones de tiempo y memoria, y un núcleo de Programación Orientada a Objetos con encapsulamiento, herencia y polimorfismo.
+
+En la Fase 4 se consolida el proyecto final mediante notebooks ubicados en `src/fase4/`. Esta fase integra los resultados F1-F4, construye visualizaciones analíticas finales, sintetiza hallazgos, limitaciones, riesgos, recomendaciones y conclusiones, y entrega insumos para el informe técnico final y la presentación audiovisual en Canvas Studio.
 
 ---
 
@@ -55,6 +59,10 @@ Analizar la evolución global de la industria fitness y gimnasios entre 2000 y 2
 - Incorporar GitHub Models para generar resúmenes automáticos de Pull Requests.
 - Definir criterios iniciales para limpieza, validación y trazabilidad de datos.
 - Preparar la base técnica para las siguientes fases del proyecto ABP.
+- Implementar notebooks de Fase 3 con algoritmos estructurados, recursivos, mediciones de complejidad y Programación Orientada a Objetos.
+- Comparar implementaciones algorítmicas mediante mediciones reproducibles de tiempo y memoria.
+- Implementar notebooks de Fase 4 para integrar resultados, construir visualizaciones finales y sintetizar hallazgos.
+- Mantener trazabilidad de mejoras mediante `CHANGELOG.md`, evidencias y commits descriptivos.
 
 ---
 
@@ -79,15 +87,10 @@ Analizar la evolución global de la industria fitness y gimnasios entre 2000 y 2
 | Fuente | Kaggle |
 | Periodo de análisis | 2000-2026 |
 | Unidad de análisis | Países y regiones |
-<<<<<<< Updated upstream
-| Formato | CSV |
-| Ubicación | `data/raw/clean_gym_data.csv` |
-=======
 | Ubicación original | `data/raw/clean_gym_data.csv` |
 | Ubicación procesada | `data/processed/gym_data_processed.csv` |
 
 El archivo ubicado en `data/raw/` se conserva como fuente original sin modificaciones. Las transformaciones realizadas durante la Fase 2 se exportan a `data/processed/`, manteniendo trazabilidad entre los datos originales y los datos procesados.
->>>>>>> Stashed changes
 
 El archivo se mantiene en `data/raw/` para conservar una copia original sin modificaciones. En fases posteriores, cualquier versión transformada o procesada deberá almacenarse en `data/processed/`, manteniendo la trazabilidad entre el dato original y las versiones derivadas.
 
@@ -116,48 +119,6 @@ El dataset contiene variables relacionadas con industria fitness, economía, ter
 
 ---
 
-<<<<<<< Updated upstream
-## Dimensiones de análisis
-
-Las variables del dataset permiten estudiar la problemática desde tres dimensiones principales.
-
-### 1. Industria fitness
-
-Incluye variables como:
-
-- `gym_memberships`
-- `fitness_participation_rate`
-- `total_health_club_revenue_usd`
-- `number_of_gyms`
-- `gym_penetration_rate`
-- `average_membership_cost_usd`
-
-Estas variables permiten observar el crecimiento del sector, la adopción de gimnasios, la participación fitness y los ingresos asociados a la industria.
-
-### 2. Economía y territorio
-
-Incluye variables como:
-
-- `gdp_per_capita_usd`
-- `urban_population_percentage`
-- `population_total`
-- `country`
-- `region`
-- `year`
-
-Estas variables permiten comparar países y regiones, observando si las condiciones económicas o urbanas se relacionan con el acceso a servicios fitness.
-
-### 3. Salud pública
-
-Incluye variables como:
-
-- `obesity_rate`
-- `insufficient_physical_activity_pct`
-- `fitness_participation_rate`
-- `gym_penetration_rate`
-
-Estas variables permiten explorar relaciones entre actividad física, obesidad, inactividad física y participación fitness.
-=======
 ## Variables derivadas de Fase 2
 
 Durante la Fase 2 se generan nuevas variables para apoyar análisis posteriores:
@@ -170,7 +131,6 @@ Durante la Fase 2 se generan nuevas variables para apoyar análisis posteriores:
 | `periodo` | Clasificación temporal del registro: `pre_covid`, `covid` o `post_covid`. |
 
 Además, se crean variables normalizadas con sufijo `_norm`, aplicando normalización min-max sobre variables numéricas seleccionadas. Estas columnas permiten comparar variables con escalas diferentes sin reemplazar los valores originales.
->>>>>>> Stashed changes
 
 ---
 
@@ -179,24 +139,14 @@ Además, se crean variables normalizadas con sufijo `_norm`, aplicando normaliza
 | Herramienta | Uso dentro del proyecto |
 |---|---|
 | Python | Lenguaje principal para análisis de datos. |
-<<<<<<< Updated upstream
-| Pandas | Carga, manipulación y exploración del dataset. |
-| NumPy | Apoyo en operaciones numéricas. |
-=======
 | Pandas | Carga, manipulación, limpieza, transformación y exploración de datos. |
 | NumPy | Apoyo en operaciones numéricas y creación de variables derivadas. |
->>>>>>> Stashed changes
 | Matplotlib | Visualización inicial de datos. |
 | Jupyter Notebook | Desarrollo del análisis reproducible mediante código y celdas narrativas. |
 | Git | Control de versiones local. |
 | GitHub | Repositorio remoto y colaboración grupal. |
-<<<<<<< Updated upstream
-| GitHub Desktop | Gestión visual de commits, ramas y sincronización. |
-| GitHub Actions | Validación automática de estructura, dependencias, dataset y notebook. |
-=======
 | GitHub Desktop | Gestión visual de commits, cambios y sincronización con GitHub. |
 | GitHub Actions | Validación automática de estructura, dependencias, dataset y notebooks. |
->>>>>>> Stashed changes
 | GitHub Models | Generación automática de resúmenes técnicos en Pull Requests. |
 | GitHub Wiki | Documentación técnica ampliada del proyecto. |
 
@@ -269,6 +219,65 @@ gym-fitness-analytics/
 
 ---
 
+## Estructura actualizada para F1-F4
+
+La estructura base anterior se mantiene, pero para la entrega final se complementa con las carpetas de Fase 3 y Fase 4:
+
+```text
+gym-fitness-analytics/
+│
+├── README.md
+├── CHANGELOG.md
+├── requirements.txt
+├── requirements_f3.txt
+├── requirements_f4.txt
+│
+├── data/
+│   ├── raw/
+│   │   └── clean_gym_data.csv
+│   └── processed/
+│       └── gym_data_processed.csv
+│
+├── notebooks/
+│   ├── F1_Definicion.ipynb
+│   ├── F1_Definicion_v2.ipynb
+│   └── F2_Limpieza_Transformacion.ipynb
+│
+├── src/
+│   ├── fase3/
+│   │   ├── F3_01_Preprocesamiento.ipynb
+│   │   ├── F3_02_Algoritmos.ipynb
+│   │   ├── F3_03_Mediciones.ipynb
+│   │   ├── F3_04_Nucleo_POO.ipynb
+│   │   ├── F3_05_Integrador_Resultados.ipynb
+│   │   └── README_F3.md
+│   │
+│   └── fase4/
+│       ├── F4_01_Integracion_Final.ipynb
+│       ├── F4_02_Visualizaciones_Finales.ipynb
+│       ├── F4_03_Resultados_Conclusiones.ipynb
+│       └── README_F4.md
+│
+├── docs/
+│   ├── mapa_conceptual.pdf
+│   └── fase4/
+│       ├── informe_f4_estructura.md
+│       ├── guion_presentacion_f4.md
+│       └── checklist_f4.md
+│
+└── reports/
+    ├── fase1/evidencias/
+    ├── fase2/evidencias/
+    ├── fase3/
+    │   ├── figures/
+    │   └── evidencias/
+    └── fase4/
+        ├── figures/
+        └── evidencias/
+```
+
+---
+
 ## Función de las carpetas principales
 
 | Carpeta | Uso |
@@ -283,6 +292,12 @@ gym-fitness-analytics/
 | `reports/fase1/` | Contiene informe técnico y evidencias de la Fase 1. |
 | `reports/fase2/` | Contiene informe técnico y evidencias asociadas a la Fase 2. |
 | `.github/workflows/` | Contiene workflows de GitHub Actions. |
+| `src/fase3/` | Contiene notebooks de núcleo algorítmico, mediciones de complejidad y Programación Orientada a Objetos. |
+| `src/fase4/` | Contiene notebooks de integración final, visualizaciones, resultados y conclusiones. |
+| `reports/fase3/figures/` | Contiene gráficos de mediciones de algoritmos generados en Fase 3. |
+| `reports/fase3/evidencias/` | Contiene capturas y evidencias de ejecución de notebooks Fase 3. |
+| `reports/fase4/figures/` | Contiene las visualizaciones finales del proyecto. |
+| `reports/fase4/evidencias/` | Contiene capturas y evidencias para informe final y presentación audiovisual. |
 
 ---
 
@@ -312,11 +327,25 @@ ipykernel>=6.0.0
 nbconvert>=7.0.0
 ```
 
-<<<<<<< Updated upstream
-### Ejecución local del notebook
-=======
+### Orden general de ejecución F1-F4
+
+```text
+1. notebooks/F1_Definicion.ipynb
+2. notebooks/F1_Definicion_v2.ipynb
+3. notebooks/F2_Limpieza_Transformacion.ipynb
+4. src/fase3/F3_01_Preprocesamiento.ipynb
+5. src/fase3/F3_02_Algoritmos.ipynb
+6. src/fase3/F3_03_Mediciones.ipynb
+7. src/fase3/F3_04_Nucleo_POO.ipynb
+8. src/fase3/F3_05_Integrador_Resultados.ipynb
+9. src/fase4/F4_01_Integracion_Final.ipynb
+10. src/fase4/F4_02_Visualizaciones_Finales.ipynb
+11. src/fase4/F4_03_Resultados_Conclusiones.ipynb
+```
+
+El archivo `data/processed/gym_data_processed.csv` debe existir antes de ejecutar los notebooks de Fase 3 y Fase 4. Si no existe, se debe ejecutar primero `notebooks/F2_Limpieza_Transformacion.ipynb` o `src/fase3/F3_01_Preprocesamiento.ipynb`.
+
 ### Ejecución del notebook Fase 1
->>>>>>> Stashed changes
 
 El notebook principal de Fase 1 se encuentra en:
 
@@ -520,6 +549,110 @@ Los criterios de limpieza definidos para esta fase son:
 
 ---
 
+## Notebook Fase 3
+
+La Fase 3 implementa el núcleo algorítmico, las mediciones de eficiencia y la Programación Orientada a Objetos del proyecto. Los notebooks se ubican en:
+
+```text
+src/fase3/
+```
+
+| Notebook | Propósito |
+|---|---|
+| `F3_01_Preprocesamiento.ipynb` | Reutiliza y refuerza el pipeline de limpieza, transformación, validación y exportación del dataset procesado. |
+| `F3_02_Algoritmos.ipynb` | Implementa algoritmos estructurados, recursivos, divide and conquer, búsqueda lineal, filtros y grafo con DFS recursivo. |
+| `F3_03_Mediciones.ipynb` | Mide tiempo y memoria de los algoritmos, genera gráficos comparativos y justifica la elección algorítmica. |
+| `F3_04_Nucleo_POO.ipynb` | Implementa el núcleo orientado a objetos con clases, encapsulamiento, herencia, polimorfismo, mediciones y validaciones. |
+| `F3_05_Integrador_Resultados.ipynb` | Integra resultados de Fase 3, evidencia cumplimiento técnico y apoya la redacción del informe. |
+
+### Algoritmos implementados en Fase 3
+
+| Algoritmo | Tipo | Complejidad temporal | Complejidad espacial |
+|---|---|---|---|
+| Ranking iterativo | Estructurado | O(n log n) | O(n) |
+| Máximo iterativo | Estructurado | O(n) | O(1) |
+| Máximo recursivo con slicing | Recursivo | O(n) | O(n) |
+| Máximo recursivo optimizado | Recursivo optimizado | O(n) | O(log n) |
+| Promedio manual por región | Estructurado | O(n) | O(k) |
+| Promedio Pandas por región | Pandas groupby | O(n) aprox. | O(k) |
+| DFS recursivo sobre grafo regional | Recursivo / grafos | O(V + E) | O(V) |
+
+### Programación Orientada a Objetos en Fase 3
+
+El notebook `F3_04_Nucleo_POO.ipynb` implementa:
+
+- `DatasetFitness`
+- `AlgoritmoBase`
+- `RankingFitness`
+- `MaximoFitness`
+- `PromedioRegionalFitness`
+- `MedidorComplejidad`
+- `ExperimentoAlgoritmico`
+
+Se aplican principios de encapsulamiento, herencia, polimorfismo, alta cohesión, bajo acoplamiento y métodos documentados.
+
+### Figuras y evidencias de Fase 3
+
+```text
+reports/fase3/figures/grafico_tiempo_algoritmos.png
+reports/fase3/figures/grafico_memoria_algoritmos.png
+reports/fase3/evidencias/
+```
+
+---
+
+## Notebook Fase 4
+
+La Fase 4 integra los resultados finales del proyecto, construye visualizaciones analíticas y genera insumos para el informe final y la presentación audiovisual. Los notebooks se ubican en:
+
+```text
+src/fase4/
+```
+
+| Notebook | Propósito |
+|---|---|
+| `F4_01_Integracion_Final.ipynb` | Integra las fases F1-F4, valida el dataset procesado y genera tablas de trazabilidad. |
+| `F4_02_Visualizaciones_Finales.ipynb` | Construye visualizaciones finales y las guarda en `reports/fase4/figures/`. |
+| `F4_03_Resultados_Conclusiones.ipynb` | Sintetiza hallazgos, limitaciones, riesgos, recomendaciones y conclusiones. |
+
+### Visualizaciones finales Fase 4
+
+| Figura | Descripción |
+|---|---|
+| `figura_1_evolucion_membresias.png` | Evolución anual de membresías fitness por cada 100.000 habitantes. |
+| `figura_2_penetracion_region.png` | Penetración promedio de gimnasios por región. |
+| `figura_3_pib_participacion.png` | Relación entre PIB per cápita y participación fitness. |
+| `figura_4_comparacion_periodo.png` | Comparación de indicadores fitness por periodo. |
+
+Estas figuras se guardan en:
+
+```text
+reports/fase4/figures/
+```
+
+### Evidencias Fase 4
+
+```text
+reports/fase4/evidencias/
+```
+
+Evidencias recomendadas:
+
+```text
+01_f4_integracion_dataset.png
+02_f4_visualizacion_1.png
+03_f4_visualizacion_2.png
+04_f4_visualizacion_3.png
+05_f4_visualizacion_4.png
+06_f4_resultados_conclusiones.png
+07_readme_actualizado.png
+08_changelog.png
+09_commits_f4.png
+10_presentacion_canvas.png
+```
+
+---
+
 ## Ejecución automática de notebooks en CI
 
 Como mejora de reproducibilidad, los notebooks se ejecutan automáticamente mediante GitHub Actions usando `nbconvert`.
@@ -599,6 +732,8 @@ La rama `main` se mantiene como la versión estable del proyecto. Los cambios se
 | `feature/dataset-validacion` | Revisar la ubicación, estructura y validación inicial del dataset. | `data/`, `data/raw/clean_gym_data.csv` |
 | `feature/github-models-pr-summary` | Implementar resumen automático de Pull Requests con GitHub Models. | `.github/workflows/ai-pr-summary.yml` |
 | `feature/fase2-limpieza-transformacion` | Implementar el notebook, pipeline, validaciones y documentación de Fase 2. | `notebooks/F2_Limpieza_Transformacion.ipynb`, `data/processed/`, `reports/fase2/` |
+| `feature/fase3-algoritmos-poo` | Implementar algoritmos, mediciones, núcleo POO y documentación de Fase 3. | `src/fase3/`, `reports/fase3/`, `requirements_f3.txt` |
+| `feature/fase4-integracion-visualizaciones` | Implementar integración final, visualizaciones, resultados, conclusiones y documentación Fase 4. | `src/fase4/`, `reports/fase4/`, `docs/fase4/`, `requirements_f4.txt`, `CHANGELOG.md` |
 
 ### Flujo de trabajo con ramas
 
@@ -809,21 +944,6 @@ La Wiki permite profundizar en aspectos que en el README se presentan de forma r
 
 Durante la exploración inicial se revisarán:
 
-<<<<<<< Updated upstream
-- Cantidad de filas y columnas.
-- Nombres de columnas.
-- Tipos de datos.
-- Valores nulos.
-- Registros duplicados.
-- Rango de años disponibles.
-- Cantidad de países representados.
-- Cantidad de regiones representadas.
-- Distribución temporal de registros.
-- Valores mínimos y máximos de variables numéricas.
-- Posibles valores atípicos.
-- Coherencia entre país, región y año.
-- Consistencia de columnas esperadas.
-=======
 - Posible presencia de datos estimados o modelados para años recientes.
 - Diferencias en la calidad de datos entre países.
 - Variables económicas o de salud pública provenientes de distintas fuentes.
@@ -834,7 +954,6 @@ Durante la exploración inicial se revisarán:
 - Diferencias de escala entre variables como población, ingresos, membresías y cantidad de gimnasios.
 
 Estos riesgos serán abordados mediante exploración inicial, documentación de decisiones, limpieza reproducible, transformación de variables y validaciones técnicas.
->>>>>>> Stashed changes
 
 ---
 
@@ -912,6 +1031,36 @@ Evidencias recomendadas para Fase 2:
 
 ---
 
+### Evidencias recomendadas para Fase 3
+
+| Evidencia | Descripción |
+|---|---|
+| `01_preprocesamiento_validado.png` | Evidencia del pipeline de preprocesamiento y validación final. |
+| `02_algoritmos_ejecutados.png` | Evidencia de algoritmos estructurados y recursivos. |
+| `03_pruebas_casos_limite.png` | Evidencia de validaciones normales, límite y excepciones. |
+| `04_tabla_mediciones.png` | Evidencia de mediciones de tiempo y memoria. |
+| `grafico_tiempo_algoritmos.png` | Figura comparativa de tiempo promedio. |
+| `grafico_memoria_algoritmos.png` | Figura comparativa de memoria pico. |
+| `05_nucleo_poo.png` | Evidencia de clases, herencia, polimorfismo y encapsulamiento. |
+| `06_integrador_resultados.png` | Evidencia de integración de resultados F3. |
+
+### Evidencias recomendadas para Fase 4
+
+| Evidencia | Descripción |
+|---|---|
+| `01_f4_integracion_dataset.png` | Evidencia de integración F1-F4 y carga del dataset procesado. |
+| `02_f4_visualizacion_1.png` | Evidencia de evolución anual de membresías. |
+| `03_f4_visualizacion_2.png` | Evidencia de penetración promedio por región. |
+| `04_f4_visualizacion_3.png` | Evidencia de relación PIB per cápita y participación fitness. |
+| `05_f4_visualizacion_4.png` | Evidencia de comparación por periodo. |
+| `06_f4_resultados_conclusiones.png` | Evidencia de hallazgos, limitaciones, riesgos y conclusiones. |
+| `07_readme_actualizado.png` | Evidencia del README final. |
+| `08_changelog.png` | Evidencia de trazabilidad de mejoras. |
+| `09_commits_f4.png` | Evidencia de commits de Fase 4. |
+| `10_presentacion_canvas.png` | Evidencia de presentación audiovisual en Canvas Studio. |
+
+---
+
 ## Vinculación con el mapa conceptual
 
 El mapa conceptual permitió planificar la relación entre problemática, dataset, herramientas científicas, flujo reproducible, documentación técnica y control de versiones.
@@ -957,22 +1106,40 @@ Quedan proyectados para fases posteriores:
 
 ## Articulación con fases F1-F4
 
-| Fase | Propósito |
-|---|---|
-| F1 | Definir problemática, organizar entorno reproducible, crear notebook inicial y documentar decisiones técnicas. |
-| F2 | Realizar obtención, limpieza, depuración, transformación, validación y exportación del dataset procesado. |
-| F3 | Ejecutar análisis exploratorio, visualizaciones y comparaciones entre países o regiones. |
-| F4 | Interpretar resultados, elaborar conclusiones y evaluar posible modelación predictiva. |
+| Fase | Propósito | Evidencia principal |
+|---|---|---|
+| F1 | Definir problemática, organizar entorno reproducible, crear notebook inicial y documentar decisiones técnicas. | `notebooks/F1_Definicion.ipynb`, `notebooks/F1_Definicion_v2.ipynb`, README, CI/CD. |
+| F2 | Realizar obtención, limpieza, depuración, transformación, validación y exportación del dataset procesado. | `notebooks/F2_Limpieza_Transformacion.ipynb`, `data/processed/gym_data_processed.csv`. |
+| F3 | Implementar soluciones algorítmicas eficientes, mediciones de complejidad y Programación Orientada a Objetos. | `src/fase3/`, `reports/fase3/figures/`, `reports/fase3/evidencias/`. |
+| F4 | Integrar resultados, construir visualizaciones finales, discutir hallazgos y preparar informe/presentación final. | `src/fase4/`, `reports/fase4/figures/`, `docs/fase4/`. |
 
 ---
 
 ## Estado del proyecto
 
-**Fase actual:** Fase 2 - Obtención, limpieza, transformación y validación técnica del dataset.
+**Fase actual:** Fase 4 - Proyecto final ABP.
 
-En esta fase se implementa el notebook `F2_Limpieza_Transformacion.ipynb`, el cual carga el dataset original, aplica un pipeline de limpieza y transformación, crea variables derivadas, normaliza variables seleccionadas, valida el dataset resultante y exporta una versión procesada en `data/processed/gym_data_processed.csv`.
+El proyecto cuenta con una base reproducible de Fase 1, un pipeline de limpieza y transformación de Fase 2, un núcleo algorítmico y POO de Fase 3, y notebooks de Fase 4 orientados a integración final, visualizaciones, resultados, conclusiones e insumos para la presentación audiovisual.
 
-Además, se actualiza el flujo de CI/CD para ejecutar automáticamente los notebooks de Fase 1 y Fase 2, validar la estructura del repositorio y comprobar la generación del dataset procesado.
+La entrega final consolida informe técnico, notebooks ejecutables, repositorio reproducible, visualizaciones finales, evidencias, changelog y presentación audiovisual.
+
+---
+
+## Documentación final Fase 4
+
+La Fase 4 incorpora documentación de apoyo ubicada en:
+
+```text
+docs/fase4/
+```
+
+| Archivo | Propósito |
+|---|---|
+| `informe_f4_estructura.md` | Propone la estructura del informe final en máximo 10 páginas. |
+| `guion_presentacion_f4.md` | Entrega un guion base para la presentación audiovisual en Canvas Studio. |
+| `checklist_f4.md` | Lista de verificación para informe, notebooks, repositorio y presentación. |
+
+Además, el archivo `CHANGELOG.md` registra las mejoras aplicadas entre F1 y F4, permitiendo demostrar trazabilidad técnica, decisiones de optimización y evolución del proyecto.
 
 ---
 
